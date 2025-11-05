@@ -1,17 +1,18 @@
 import pymysql
+
 class Conexion:
     def __init__(self,host,user,password,db):
-        self.db=pymysql.connect(
+        self.db = pymysql.connect(
             host=host,
             user=user,
             password=password,
             db=db
         )
-
-        self.cursor=self.db.cursor()
+        self.cursor = self.db.cursor()
     
-    def ejecuta_query(self,sql):
-        self.cursor.execute(sql)
+    def ejecuta_query(self, sql, parametros=None):
+        """Ejecuta una consulta SQL con soporte para parámetros seguros."""
+        self.cursor.execute(sql, parametros) 
         return self.cursor
 
     def desconectar(self):
@@ -22,5 +23,3 @@ class Conexion:
 
     def rollback(self):
         self.db.rollback()
-
-    

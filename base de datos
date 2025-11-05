@@ -1,81 +1,50 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 17-10-2025 a las 17:44:20
--- Versión del servidor: 8.0.41
--- Versión de PHP: 8.3.14
+CREATE DATABASE IF NOT EXISTS pro;
+USE pro;
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Tabla Departamento
+CREATE TABLE departamento (
+    id_departamento INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL UNIQUE
+);
 
+-- Tabla Empleado
+CREATE TABLE empleado (
+    id_empleado INT AUTO_INCREMENT PRIMARY KEY,
+    run VARCHAR(12) NOT NULL UNIQUE,
+    nombre VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    direccion VARCHAR(200),
+    fono VARCHAR(15),
+    correo VARCHAR(100),
+    fecha_contrato DATE,
+    id_departamento INT,
+    FOREIGN KEY (id_departamento) REFERENCES departamento(id_departamento)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- Tabla del proyecto 
+CREATE TABLE proyecto (
+    id_proyecto INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    fecha_inicio DATE,
+    id_director INT,
+    FOREIGN KEY (id_director) REFERENCES empleado(id_empleado)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
 
---
--- Base de datos: `empresa`
---
-CREATE DATABASE IF NOT EXISTS `empresa` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci;
-USE `empresa`;
+-- Datos de ejemplo 
+INSERT INTO departamento (nombre) VALUES 
+('Recursos Humanos'),
+('Tecnología'),
+('Ventas'),
+('Marketing');
 
--- --------------------------------------------------------
+INSERT INTO empleado (run, nombre, apellidos, direccion, fono, correo, fecha_contrato, id_departamento) VALUES
+('12345678-9', 'Juan', 'Pérez González', 'Av. Principal 123', '987654321', 'juan.perez@empresa.com', '2023-01-15', 1),
+('98765432-1', 'María', 'López Silva', 'Calle Secundaria 456', '123456789', 'maria.lopez@empresa.com', '2023-02-20', 2),
+('11111111-1', 'Carlos', 'Rodríguez Morales', 'Plaza Central 789', '555666777', 'carlos.rodriguez@empresa.com', '2023-03-10', 2);
 
---
--- Estructura de tabla para la tabla `cliente`
---
-
-DROP TABLE IF EXISTS `cliente`;
-CREATE TABLE IF NOT EXISTS `cliente` (
-  `id_cliente` int NOT NULL AUTO_INCREMENT,
-  `run` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
-  `nombre` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
-  `apellido` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
-  `direccion` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
-  `fono` int NOT NULL,
-  `correo` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
-  `montoCredito` int NOT NULL,
-  `deuda` int NOT NULL,
-  `id_tipo_usuario` int NOT NULL,
-  PRIMARY KEY (`id_cliente`),
-  KEY `id_tipo_usuario` (`id_tipo_usuario`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
---
--- Volcado de datos para la tabla `cliente`
---
-
-INSERT INTO `cliente` (`id_cliente`, `run`, `nombre`, `apellido`, `direccion`, `fono`, `correo`, `montoCredito`, `deuda`, `id_tipo_usuario`) VALUES
-(1, '21.321.654-9', 'Francisco', 'Caiceo', 'La Serena', 321654, 'fco@inacap.cl', 200000, 0, 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tipo_usuario`
---
-
-DROP TABLE IF EXISTS `tipo_usuario`;
-CREATE TABLE IF NOT EXISTS `tipo_usuario` (
-  `id_tipo_usuario` int NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci NOT NULL,
-  PRIMARY KEY (`id_tipo_usuario`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
---
--- Volcado de datos para la tabla `tipo_usuario`
---
-
-INSERT INTO `tipo_usuario` (`id_tipo_usuario`, `descripcion`) VALUES
-(1, 'Cliente Mayoroista'),
-(2, 'Cliente Minorista'),
-(3, 'Cliente Invitado'),
-(4, 'Cliente Premium');
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+INSERT INTO proyecto (nombre, fecha_inicio, id_director) VALUES
+('Sistema de Gestión', '2023-04-01', 2),
+('Campaña Publicitaria', '2023-05-15', 1),
+('Desarrollo Web', '2023-06-01', 3);
